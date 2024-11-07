@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { MyButton } from '../Components/Button';
+import { FilterValuesType } from "../state/todolists-reducer";
 import { AddItemForm } from "../Components/AddItemForm";
 import { EditableSpan } from "../Components/EditableSpan";
 import List from '@mui/material/List';
@@ -14,25 +15,22 @@ type TodoListPropsType = {
     filter: FilterValuesType;
     removeTask: (taskId: string, todoListId: string) => void;
     changeTaskStatus: (taskId: string, taskStatus: boolean, todoListId: string) => void;
+    changeFilter: (filter: FilterValuesType, todoListId: string) => void;
     addTask: (title: string, todoListId: string) => void;
     removeTodolist: (todolistId: string) => void;
     changeTaskTitle: (todoListId: string, taskId: string, title: string) => void;
     updateTodolist: (todoListId: string, title: string) => void;
-    changeFilter: (filter: FilterValuesType, todoListId: string) => void; // Добавляем changeFilter
 };
 
 export type TasksStateType = {
     [key: string]: TaskStateType[];
 };
 
-type FilterValuesType = 'all' | 'active' | 'completed';
-
 export const TodoList = React.memo(({
                                         title, todoListId, tasks,
                                         filter, removeTask, addTask,
                                         changeTaskStatus, changeTaskTitle,
-                                        removeTodolist, updateTodolist,
-                                        changeFilter
+                                        changeFilter, removeTodolist, updateTodolist
                                     }: TodoListPropsType) => {
 
     const addTaskCallback = useCallback((title: string) => {
@@ -59,6 +57,16 @@ export const TodoList = React.memo(({
         updateTodolist(todoListId, title);
     }, [todoListId, updateTodolist]);
 
+    let tasksForTodolist = tasks;
+
+    if (filter === 'active') {
+        tasksForTodolist = tasks.filter(task => !task.isDone);
+    }
+
+    if (filter === 'completed') {
+        tasksForTodolist = tasks.filter(task => task.isDone);
+    }
+
     return (
         <div className="todolist">
             <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "15px" }}>
@@ -69,7 +77,7 @@ export const TodoList = React.memo(({
             </div>
             <AddItemForm addItem={addTaskCallback} />
             <List>
-                {tasks.map((task) => (
+                {tasksForTodolist.map((task) => (
                     <Task
                         key={task.id}
                         id={task.id}

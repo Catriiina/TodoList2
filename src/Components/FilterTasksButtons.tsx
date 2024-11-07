@@ -1,4 +1,3 @@
-
 import React, { memo, useCallback } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -10,6 +9,7 @@ type FilterTasksButtonsProps = {
     changeFilter: (filter: FilterValuesType, todoListId: string) => void;
     todoListId: string;
 };
+
 export const FilterTasksButtons = memo(({ filter, changeFilter, todoListId }: FilterTasksButtonsProps) => {
     const changeFilterHandler = useCallback(
         (filterValue: FilterValuesType) => {
