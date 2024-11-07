@@ -1,14 +1,11 @@
 import React, { useCallback } from "react";
 import { MyButton } from '../Components/Button';
-import { FilterValuesType } from "../state/todolists-reducer";
 import { AddItemForm } from "../Components/AddItemForm";
 import { EditableSpan } from "../Components/EditableSpan";
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import Box from '@mui/material/Box';
-import { filterButtonsContainerSx } from './Todolist.styles';
-import {Task} from "../Components/Task";
-import {TaskStateType} from "../state/task-reducer";
+import { Task } from "../Components/Task";
+import { TaskStateType } from "../state/task-reducer";
+import { FilterTasksButtons } from '../Components/FilterTasksButtons';
 
 type TodoListPropsType = {
     title: string;
@@ -17,22 +14,25 @@ type TodoListPropsType = {
     filter: FilterValuesType;
     removeTask: (taskId: string, todoListId: string) => void;
     changeTaskStatus: (taskId: string, taskStatus: boolean, todoListId: string) => void;
-    changeFilter: (filter: FilterValuesType, todoListId: string) => void;
     addTask: (title: string, todoListId: string) => void;
     removeTodolist: (todolistId: string) => void;
     changeTaskTitle: (todoListId: string, taskId: string, title: string) => void;
     updateTodolist: (todoListId: string, title: string) => void;
+    changeFilter: (filter: FilterValuesType, todoListId: string) => void; // Добавляем changeFilter
 };
 
 export type TasksStateType = {
     [key: string]: TaskStateType[];
 };
 
+type FilterValuesType = 'all' | 'active' | 'completed';
+
 export const TodoList = React.memo(({
                                         title, todoListId, tasks,
                                         filter, removeTask, addTask,
                                         changeTaskStatus, changeTaskTitle,
-                                        changeFilter, removeTodolist, updateTodolist
+                                        removeTodolist, updateTodolist,
+                                        changeFilter
                                     }: TodoListPropsType) => {
 
     const addTaskCallback = useCallback((title: string) => {
@@ -47,31 +47,17 @@ export const TodoList = React.memo(({
         changeTaskStatus(taskId, taskStatus, todoListId);
     }, [todoListId, changeTaskStatus]);
 
-    const changeFilterHandler = useCallback((filter: FilterValuesType) => {
-        changeFilter(filter, todoListId);
-    }, [changeFilter, todoListId]);
+    const changeTaskTitleHandler = useCallback((taskId: string, title: string) => {
+        changeTaskTitle(todoListId, taskId, title);
+    }, [todoListId, changeTaskTitle]);
 
     const removeTodolistHandler = useCallback(() => {
         removeTodolist(todoListId);
     }, [todoListId, removeTodolist]);
 
-    const changeTaskTitleHandler = useCallback((taskId: string, title: string) => {
-        changeTaskTitle(todoListId, taskId, title);
-    }, [todoListId, changeTaskTitle]);
-
     const updateTodolistHandler = useCallback((title: string) => {
         updateTodolist(todoListId, title);
     }, [todoListId, updateTodolist]);
-
-    let tasksForTodolist = tasks;
-
-    if (filter === 'active') {
-        tasksForTodolist = tasks.filter(task => !task.isDone);
-    }
-
-    if (filter === 'completed') {
-        tasksForTodolist = tasks.filter(task => task.isDone);
-    }
 
     return (
         <div className="todolist">
@@ -83,41 +69,19 @@ export const TodoList = React.memo(({
             </div>
             <AddItemForm addItem={addTaskCallback} />
             <List>
-                {tasksForTodolist.map((task) => (
+                {tasks.map((task) => (
                     <Task
                         key={task.id}
                         id={task.id}
                         title={task.title}
                         isDone={task.isDone}
                         onStatusChange={changeTaskStatusHandler}
-                        onTitleChange={updateTodolistHandler}
+                        onTitleChange={changeTaskTitleHandler}
                         onTaskRemove={removeTaskHandler}
                     />
                 ))}
             </List>
-            <Box sx={filterButtonsContainerSx}>
-                <Button
-                    variant={filter === 'all' ? 'outlined' : 'text'}
-                    color={'inherit'}
-                    onClick={() => changeFilterHandler("all")}
-                >
-                    All
-                </Button>
-                <Button
-                    variant={filter === 'active' ? 'outlined' : 'text'}
-                    color={'primary'}
-                    onClick={() => changeFilterHandler("active")}
-                >
-                    Active
-                </Button>
-                <Button
-                    variant={filter === 'completed' ? 'outlined' : 'text'}
-                    color={'secondary'}
-                    onClick={() => changeFilterHandler("completed")}
-                >
-                    Completed
-                </Button>
-            </Box>
+            <FilterTasksButtons filter={filter} changeFilter={changeFilter} todoListId={todoListId} />
         </div>
     );
 });
