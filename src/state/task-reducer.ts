@@ -2,6 +2,11 @@ import { TasksStateType } from '../TodoList/TodoList';
 import { v1 } from "uuid";
 import { AddTodolistActionType, RemoveTodolistActionType } from "./todolists-reducer";
 
+export type TaskStateType = {
+    id: string;
+    title: string;
+    isDone: boolean;
+};
 // Определяем тип действия для удаления задачи
 export type RemoveTaskActionType = {
     type: 'REMOVE_TASK';

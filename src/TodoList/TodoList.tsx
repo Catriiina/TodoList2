@@ -1,13 +1,14 @@
 import React, { useCallback } from "react";
 import { MyButton } from '../Components/Button';
-import { FilterValuesType } from "../App";
+import { FilterValuesType } from "../state/todolists-reducer";
 import { AddItemForm } from "../Components/AddItemForm";
 import { EditableSpan } from "../Components/EditableSpan";
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
-import { filterButtonsContainerSx, getListItemSx } from './Todolist.styles';
+import { filterButtonsContainerSx } from './Todolist.styles';
 import {Task} from "../Components/Task";
+import {TaskStateType} from "../state/task-reducer";
 
 type TodoListPropsType = {
     title: string;
@@ -21,12 +22,6 @@ type TodoListPropsType = {
     removeTodolist: (todolistId: string) => void;
     changeTaskTitle: (todoListId: string, taskId: string, title: string) => void;
     updateTodolist: (todoListId: string, title: string) => void;
-};
-
-export type TaskStateType = {
-    id: string;
-    title: string;
-    isDone: boolean;
 };
 
 export type TasksStateType = {
