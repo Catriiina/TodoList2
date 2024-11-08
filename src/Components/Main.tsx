@@ -1,31 +1,24 @@
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../state/store";
 import React, {useCallback} from "react";
-import {TasksStateType, TodoList} from "../TodoList/TodoList";
+import {TodoList} from "../TodoList/TodoList";
 import {
     addTodolistAC,
     changeFilterAC, FilterValuesType,
     removeTodolistAC,
-    TodolistType,
     updateTodolistAC
 } from "../state/todolists-reducer";
-import {changeThemeAC, ThemeMode} from "../state/app-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/task-reducer";
 import Grid from "@mui/material/Unstable_Grid2";
 import {AddItemForm} from "./AddItemForm";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
+import {useAppDispatch} from "../hooks/useAppDispatch";
+import {useAppSelector} from "../hooks/useAppSelector";
 
 
 export const Main = () => {
-    const themeMode = useSelector<AppRootStateType, ThemeMode>(state => state.theme.themeMode);
-    const todoLists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todoLists);
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks);
-    const dispatch = useDispatch();
-
-    const changeModeHandler = () => {
-        dispatch(changeThemeAC(themeMode === 'light' ? 'dark' : 'light'));
-    };
+    const todoLists = useAppSelector(state => state.todoLists)
+    const tasks = useAppSelector(state => state.tasks);
+    const dispatch = useAppDispatch();
 
     const removeTask = useCallback((taskId: string, todoListId: string) => {
         const action = removeTaskAC(taskId, todoListId);
