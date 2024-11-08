@@ -5,10 +5,10 @@ import { getTheme } from "./theme/theme";
 import {Header} from "./Components/Header";
 import {Main} from "./Components/Main";
 import {useAppSelector} from "./hooks/useAppSelector";
+import {selectThemeMode} from "./Selectors/appSelectors";
 
 function App() {
-    const themeMode = useAppSelector(state => state.theme.themeMode);
-
+    const themeMode = useAppSelector(selectThemeMode)
     return (
         <ThemeProvider theme={getTheme(themeMode)}>
             <CssBaseline />

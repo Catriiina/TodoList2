@@ -13,11 +13,13 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import {useAppDispatch} from "../hooks/useAppDispatch";
 import {useAppSelector} from "../hooks/useAppSelector";
+import {selectTasks} from "../Selectors/tasksSelectors";
+import {selectTodoLists} from "../Selectors/todolistsSelectors";
 
 
 export const Main = () => {
-    const todoLists = useAppSelector(state => state.todoLists)
-    const tasks = useAppSelector(state => state.tasks);
+    const todoLists = useAppSelector(selectTodoLists)
+    const tasks = useAppSelector(selectTasks);
     const dispatch = useAppDispatch();
 
     const removeTask = useCallback((taskId: string, todoListId: string) => {

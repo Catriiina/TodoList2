@@ -1,6 +1,4 @@
-
 import {changeThemeAC} from "../state/app-reducer";
-
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -10,9 +8,10 @@ import Switch from "@mui/material/Switch";
 import React from "react";
 import {useAppDispatch} from "../hooks/useAppDispatch";
 import {useAppSelector} from "../hooks/useAppSelector";
+import {selectThemeMode} from "../Selectors/appSelectors";
 
 export const Header = () => {
-    const themeMode = useAppSelector(state => state.theme?.themeMode)
+    const themeMode = useAppSelector(selectThemeMode)
     const dispatch = useAppDispatch()
 
     const changeModeHandler = () => {
